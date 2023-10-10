@@ -27,7 +27,7 @@ tclean(vis='as2uds10.ms',                       # Original file
 # Step 2: UV continuum subtraction
 # Expl: We want to substract the continuum from the data. We first plot, so we
 #       can find the line and hereafter substract the continuum, where we have
-#       deselected the line. If no line is seen, select whole spectrum
+#       deselected the line. If no line is seen, select whole spectrum.
 
 plotms(vis='as2uds10.ms',                       # Original file
        field='',                                # Field of source, after splitting 0
@@ -40,13 +40,23 @@ plotms(vis='as2uds10.ms',                       # Original file
        antenna='',                              # All antennas
        coloraxis='spw')                         # Spw's have color
 
-# Optional: save spectrum in .png for freq and channel using the plotms viewer
+# Optional: save spectrum in .png for freq and channel using the plotms viewer.
 
 uvcontsub(vis='as2uds10.ms',                    # Original file
           fitspw='0~1:15~50',                   # Deselect line, skip if no line
           excludechans=True,                    # We want to exclude above chans
           want_cont=True)                       # Makes a continuum image
 
-# Optional: save contsub and cont spectrum in .png for freq and channel using the plotms viewer
+# Optional: save contsub and cont spectrum in .png for freq and channel using the plotms viewer.
 
+# Step 3: Make a dirty cube of continuum-substracted data
+# Expl: We want to see what has changed when we have substracted the continuum
+#       and make a cube out of it.
 
+tclean(vis='as2uds10.ms.contsub',               # Continuum substracted file
+       imagename='as2uds10_40_05.contsub.cube_2MHz.',   # Destination file 
+       imsize=40,                               # How many pixels 
+       cell='0.5arcsec',                        # Size of pixel
+       specmode='cube',                         # Cube for spectral line imaging
+       pblimit=-0.01,                           # Primary beam gain, -for no cor 
+       niter=0)                                 # No cleaning for dirty image
