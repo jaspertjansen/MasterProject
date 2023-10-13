@@ -80,9 +80,10 @@ tclean(vis = 'as2uds10.ms.split',               # Original file (+.constsub if s
 
 # Step 7: Get out the profile
 # Expl: Check for signal in the .cube.image file in imview spectral profile tool 
-#       by drawing a region. Set x to velocity and y to flux density. Then, save
-#       profile as .txt file. No function needed for this. Also, check which
-#       channels have flux density for line. Needed in next step.
+#       by drawing a region, 2.5 arcsec radius, is already made and can be selected. 
+#       Set x to velocity and y to flux density. Then, save profile as .txt file. 
+#       No function needed for this. Also, check which channels have flux density 
+#       for line. Needed in next step.
 
 # Step 8: 0-th moment map
 # Expl: We make an integrated intensity map by collapsing the cube. This should
