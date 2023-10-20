@@ -69,9 +69,22 @@ def MakePlot(File, Title, Name, Save):
         
     return RMS
     
-def MakeProfile(File, Titel, Name, Save):
+def MakeProfile(File, RMS_file, Titel, Name, Save):
         
     Table  = open(File)
+        
+    FITSFile = fits.open(RMS_file, lazy_load_hdu=True)
+    Data = FITSFile[0].data[0]
+    Header = FITSFile[0].header
+    FITSFile.close()
+    
+    RMS = np.zeros(len(Data))
+    for i in range(len(Data)):
+        RMS[i] = np.nanstd(Data[i])*1e3
+    RMS[RMS<=0.0]=np.nan
+    RMS_mean = np.nanmean(RMS)
+    print ("Mean RMS = ", RMS_mean, "mJy/beam")
+    print(RMS)
     
     Vel, Flux = np.genfromtxt(Table, unpack=True)
     Table.close()
@@ -94,7 +107,7 @@ def MakeProfile(File, Titel, Name, Save):
     y_for_gaussian = Flux
     x_for_model = np.linspace(-2000, 2000, 1000)/100 
           
-    popt, pcov = curve_fit(Gaussian, x_for_gaussian, y_for_gaussian) 
+    popt, pcov = curve_fit(Gaussian, x_for_gaussian, y_for_gaussian, sigma=RMS) 
     #print(popt[0],popt[1]*100,popt[2]*100) 
       
     y_for_model = Gaussian(x_for_model, popt[0], popt[1], popt[2]) 
@@ -102,9 +115,11 @@ def MakeProfile(File, Titel, Name, Save):
     ax.plot(x_for_model*100, y_for_model, c='k') 
     
     FWHM = 2*np.sqrt(2*np.log(2))*popt[2]*100
-    print("FWHM =", FWHM)
+    err_FWHM = 2*np.sqrt(2*np.log(2))*np.sqrt(np.diag(pcov))[2]*100
+    print("FWHM =", FWHM, '+-', err_FWHM)
 
     plt.step(Vel, Flux, lw = 1, where='mid', color = 'darkorange', zorder = 3)
+    plt.errorbar(Vel, Flux, yerr=RMS, fmt='none', capsize=4, color='gray', alpha=0.6)
     #plt.fill_between(Freq, -RMS, RMS, facecolor = '0.85', edgecolor = 'none', zorder = 1)
     plt.fill_between(Vel, Flux, 0, step="mid", edgecolor = 'none', zorder = 1, alpha=0.4, color = 'darkorange')
     
@@ -127,18 +142,19 @@ def MakeProfile(File, Titel, Name, Save):
 
 #%%
    
-Savecondition = False 
+Savecondition = False
 
 #%%
 
-Fits_name = 'D:\\Master Astronomy Research year 2\\Master Project\\Moment_zero_images\\as2uds10_128_05_100.split.cube.image.mom0.fits'
+Fits_mom0_name = 'D:\\Master Astronomy Research year 2\\Master Project\\Moment_zero_images\\as2uds10_128_05_100.split.cube.image.mom0.fits'
+Fits_cube_name = 'D:\\Master Astronomy Research year 2\\Master Project\\Profiles\\as2uds10_128_05_100.split.cube.image.fits'
 Txt_name = 'D:\\Master Astronomy Research year 2\\Master Project\\Profiles\\spectral_profile_as2uds10.txt'
-Cont_name = 'D:\\Master Astronomy Research year 2\\Master Project\\fig_cont_AS2UDS010.0.png'
-Profile_name = 'D:\\Master Astronomy Research year 2\\Master Project\\fig_profile_AS2UDS010.0.png'
+Cont_name = 'D:\\Master Astronomy Research year 2\\Master Project\\fig_cont_AS2UDS010.0_v2.png'
+Profile_name = 'D:\\Master Astronomy Research year 2\\Master Project\\fig_profile_AS2UDS010.0_v2.png'
 Title= 'AS2UDS010.0'
 
-RMS_AS2UD10 = MakePlot(Fits_name, Title, Cont_name, Savecondition)
-FWHM_AS2UD10 = MakeProfile(Txt_name, Title, Profile_name, Savecondition)
+RMS_AS2UD10 = MakePlot(Fits_mom0_name, Title, Cont_name, Savecondition)
+FWHM_AS2UD10 = MakeProfile(Txt_name, Fits_cube_name, Title, Profile_name, Savecondition)
 
 #%%
 
