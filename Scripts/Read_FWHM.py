@@ -17,7 +17,7 @@ def ReadFITS(FileName):
 
 #%%
     
-source_name = 'AS2UDS010.0'
+source_name = 'AS2UDS231.0'
 
 
 Data, Header = ReadFITS('D:\\Master Astronomy Research year 2\\Master Project\\Table_with_FWHM2.fits')

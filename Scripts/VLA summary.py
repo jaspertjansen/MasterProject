@@ -7,8 +7,8 @@ Created on Tue Sep 26 16:36:22 2023
 
 
 
-# ------------------ Calibration --------------------------
-# Done for AS2COS54.
+# ------------------ Calibration by myself --------------------------
+# Done for AS2COS54
 
 # Step 1: Download from Archive
 # Expl: Search for '21A-254' or Hodge on the VLA archive (https://data.nrao.edu/portal/#/)
@@ -63,7 +63,7 @@ plotms(vis='21A-254.sb39393798.eb39561560.59308.094199803236.ms',   # Original f
        coloraxis='field')                       # Sources have different color
 
 # Step 8: OPTIONAL: Flag antennas
-# Expl: If misbehaving antennas appear in the data, flag them.
+# Expl: OPTIONAL: If misbehaving antennas appear in the data, flag them.
 
 flagdata(vis='21A-254.sb39393798.eb39561560.59308.094199803236.ms',     # Original file
          mode='list',                           # Can flag multiple
@@ -97,7 +97,8 @@ myTau = plotweather(vis='21A-254.sb39393798.eb39561560.59308.094199803236.ms',  
 gencal(vis='21A-254.sb39393798.eb39561560.59308.094199803236.ms',   # Original file
        caltable='opacity.cal',                  # Table to write to
        caltype='opac',                          # Opacity
-       parameter=myTau)
+       spw='0~17',                              # All spw
+       parameter=myTau)                         # Write to this parameter
 
 # Step 12: Model for flux calibrator
 # Expl: We will scale the observed flux calibrator with the model of the flux
@@ -109,7 +110,7 @@ setjy(vis='21A-254.sb39393798.eb39561560.59308.094199803236.ms',   # Original fi
 
 setjy(vis='21A-254.sb39393798.eb39561560.59308.094199803236.ms',   # Original file,
       field='2',                                # Field ID of flux calibrator
-      spw='',                                   # For all spw's
+      spw='0~15',                               # For all spw's
       scalebychan=True,                         # For channels different scaling
       model='3C286_A.im')                       # 3C286 or 3C48 in Ka (A) band
 
@@ -145,7 +146,7 @@ gaincal(vis='21A-254.sb39393798.eb39561560.59308.094199803236.ms',  # Original f
 gaincal(vis='21A-254.sb39393798.eb39561560.59308.094199803236.ms',  # Original file
         caltable='bpphase.gcal',                # Table to write to
         field='2',                              # Field ID of bandpass calibrator
-        spw='0~17:20~40',                       # All spw, no edges
+        spw='0~15:20~40',                       # All spw, no edges
         refant='ea05',                          # Refant
         calmode='p',                            # Correct for decorrelation
         solint='int',                           # Integration time of 10s
@@ -175,7 +176,7 @@ bandpass(vis='21A-254.sb39393798.eb39561560.59308.094199803236.ms',     # Origin
 gaincal(vis='21A-254.sb39393798.eb39561560.59308.094199803236.ms',  # Original file
         caltable='intphase.gcal',               # Table to write to
         field='0,2',                            # Amplitude/gain and bandpass calibrator
-        spw='0~17:4~60',                        # All spws, no edges
+        spw='0~15:4~60',                        # All spws, no edges
         solint='int',                           # Integrated time
         refant='ea05',                          # Refant
         minsnr=2.0,                             # Only good solutions
@@ -197,7 +198,7 @@ plotms(vis='intphase.gcal',                     # Solution to inspect
 gaincal(vis='21A-254.sb39393798.eb39561560.59308.094199803236.ms',  # Original file
         caltable='scanphase.gcal',              # Table to write to
         field='0,2',                            # Amplitude/gain and bandpass calibrator
-        spw='0~17:4~60',                        # All spws, no edges
+        spw='0~15:4~60',                        # All spws, no edges
         solint='inf',                           # Scan time
         refant='ea05',                          # Refant
         minsnr=2.0,                             # Only good solutions
@@ -220,7 +221,7 @@ plotms(vis='scanphase.gcal',                    # Solution to inspect
 gaincal(vis='21A-254.sb39393798.eb39561560.59308.094199803236.ms',  # Original file
         caltable='amp.gcal',                    # Table to write to
         field='0,2',                            # Amplitude/gain and bandpass calibrator
-        spw='0~17:4~60',                        # All spws, no edges
+        spw='0~15:4~60',                        # All spws, no edges
         solint='inf',                           # Scan time
         refant='ea05',                          # Refant
         minsnr=2.0,                             # Only good solutions
@@ -251,20 +252,20 @@ fluxscale(vis='21A-254.sb39393798.eb39561560.59308.094199803236.ms',    # Origin
 
 applycal(vis='21A-254.sb39393798.eb39561560.59308.094199803236.ms',     # Original file
          field='0',                             # Gain/phase calibrator
-         gaintable=['antpos.cal','gaincurve.cal','delays.cal','bandpass.bcal','intphase.gcal','amp.gcal','flux.cal'],  # Opacity omitted
-         gainfield=['','','2','2','0','0','0'], # Field ID's for tables 
+         gaintable=['antpos.cal','gaincurve.cal','opacity.cal','delays.cal','bandpass.bcal','intphase.gcal','amp.gcal','flux.cal'],
+         gainfield=['','','','2','2','0','0','0'], # Field ID's for tables 
          calwt=False)                           # Do not weigh?
 
 applycal(vis='21A-254.sb39393798.eb39561560.59308.094199803236.ms',     # Original file
          field='2',                             # Flux/bandpass calibrator
-         gaintable=['antpos.cal','gaincurve.cal','delays.cal','bandpass.bcal','intphase.gcal','amp.gcal','flux.cal'],   # Opacity omitted
-         gainfield=['','','2','2','2','2','2'], # Field ID's for tables
+         gaintable=['antpos.cal','gaincurve.cal','opacity.cal','delays.cal','bandpass.bcal','intphase.gcal','amp.gcal','flux.cal'],   # Opacity omitted
+         gainfield=['','','','2','2','2','2','2'], # Field ID's for tables
          calwt=False)                           # Do not weigh?
 
 applycal(vis='21A-254.sb39393798.eb39561560.59308.094199803236.ms',     # Original file
          field='1',                             # Target source field
-         gaintable=['antpos.cal','gaincurve.cal','delays.cal','bandpass.bcal','scanphase.gcal','amp.gcal','flux.cal'],  # Opacity omitted
-         gainfield=['','','2','2','0','0','0'], # Field ID's for tables
+         gaintable=['antpos.cal','gaincurve.cal','opacity.cal','delays.cal','bandpass.bcal','scanphase.gcal','amp.gcal','flux.cal'],  # Opacity omitted
+         gainfield=['','','','2','2','0','0','0'], # Field ID's for tables
          calwt=False)                           # Do not weigh?
 
 # Step 21: Inspect calibration
@@ -291,6 +292,285 @@ plotms(vis='21A-254.sb39393798.eb39561560.59308.094199803236.ms',   # Original f
        #antenna='!ea07;!ea12;!ea23', 
        coloraxis='antenna2')                    # Color by antenna
 
+# Step 22: OPTIONAL: Flag data
+# Expl: OPTIONAL: Can be done manually in plotms for every spw. Can also be done
+#       directly in CASA with the following command
+
+flagdata(vis='21A-254.sb39393798.eb39561560.59308.094199803236.ms',     # Original file 
+         mode='list',                           # List is most easy
+         inpfile=["antenna='ea25'"])            # Flag an antenna for the whole observation
+
+# Step 23: OPTIONAL: Rerun tables
+# Expl: OPTIONAL: After flagging, the calibration must be reapplied. 
+
+gaincal(vis='21A-254.sb39393798.eb39561560.59308.094199803236.ms',  # Original file
+        caltable='bpphase.gcal',                # Table to write to
+        field='2',                              # Field ID of bandpass calibrator
+        spw='0~15:20~40',                       # All spw, no edges
+        refant='ea05',                          # Refant
+        calmode='p',                            # Correct for decorrelation
+        solint='int',                           # Integration time of 10s
+        minsnr=2.0,                             # Only good solutions
+        gaintable=['antpos.cal','gaincurve.cal','delays.cal', 'opacity.cal'])  # Opacity might not be available
+
+bandpass(vis='21A-254.sb39393798.eb39561560.59308.094199803236.ms',     # Original dfile
+         caltable='bandpass.bcal',              # Table to write to
+         field='2',                             # Field ID of bandpass calibrator
+         refant='ea05',                         # Refant
+         solint='inf',                          # Average over scan
+         solnorm=False,                         # Do not normalize
+         gaintable=['antpos.cal','gaincurve.cal','delays.cal','bpphase.gcal', 'opacity.cal'])   # Opacity might not be available
+
+gaincal(vis='21A-254.sb39393798.eb39561560.59308.094199803236.ms',  # Original file
+        caltable='intphase.gcal',               # Table to write to
+        field='0,2',                            # Amplitude/gain and bandpass calibrator
+        spw='0~15:4~60',                        # All spws, no edges
+        solint='int',                           # Integrated time
+        refant='ea05',                          # Refant
+        minsnr=2.0,                             # Only good solutions
+        calmode='p',                            # Phase
+        gaintable=['antpos.cal','gaincurve.cal','delays.cal','bandpass.bcal', 'opacity.cal'])   # Opacity might not be available
+
+gaincal(vis='21A-254.sb39393798.eb39561560.59308.094199803236.ms',  # Original file
+        caltable='scanphase.gcal',              # Table to write to
+        field='0,2',                            # Amplitude/gain and bandpass calibrator
+        spw='0~15:4~60',                        # All spws, no edges
+        solint='inf',                           # Scan time
+        refant='ea05',                          # Refant
+        minsnr=2.0,                             # Only good solutions
+        calmode='p',                            # Phase
+        gaintable=['antpos.cal','gaincurve.cal','delays.cal','bandpass.bcal', 'opacity.cal'])   # Opacity might not be available
+
+gaincal(vis='21A-254.sb39393798.eb39561560.59308.094199803236.ms',  # Original file
+        caltable='amp.gcal',                    # Table to write to
+        field='0,2',                            # Amplitude/gain and bandpass calibrator
+        spw='0~15:4~60',                        # All spws, no edges
+        solint='inf',                           # Scan time
+        refant='ea05',                          # Refant
+        minsnr=2.0,                             # Only good solutions
+        calmode='ap',                           # Amplitude
+        gaintable=['antpos.cal','gaincurve.cal','opacity.cal','delays.cal','bandpass.bcal','intphase.gcal'])    # Opacity might not be available
+
+fluxscale(vis='21A-254.sb39393798.eb39561560.59308.094199803236.ms',    # Original file
+          caltable='amp.gcal',                  # Table to write to
+          fluxtable='flux.cal',                 # Table to write to
+          reference='2',                        # Field ID of flux calibrator
+          incremental=True)                     # With increments
+
+applycal(vis='21A-254.sb39393798.eb39561560.59308.094199803236.ms',     # Original file
+         field='0',                             # Gain/phase calibrator
+         gaintable=['antpos.cal','gaincurve.cal','opacity.cal','delays.cal','bandpass.bcal','intphase.gcal','amp.gcal','flux.cal'],
+         gainfield=['','','','2','2','0','0','0'], # Field ID's for tables 
+         calwt=False)                           # Do not weigh?
+
+applycal(vis='21A-254.sb39393798.eb39561560.59308.094199803236.ms',     # Original file
+         field='2',                             # Flux/bandpass calibrator
+         gaintable=['antpos.cal','gaincurve.cal','opacity.cal','delays.cal','bandpass.bcal','intphase.gcal','amp.gcal','flux.cal'],   # Opacity omitted
+         gainfield=['','','','2','2','2','2','2'], # Field ID's for tables
+         calwt=False)                           # Do not weigh?
+
+applycal(vis='21A-254.sb39393798.eb39561560.59308.094199803236.ms',     # Original file
+         field='1',                             # Target source field
+         gaintable=['antpos.cal','gaincurve.cal','opacity.cal','delays.cal','bandpass.bcal','scanphase.gcal','amp.gcal','flux.cal'],  # Opacity omitted
+         gainfield=['','','','2','2','0','0','0'], # Field ID's for tables
+         calwt=False)                           # Do not weigh?
+
+# Step 24: Split out the object
+# Expl: Only take the data of the target object
+
+split(vis='21A-254.sb39393798.eb39561560.59308.094199803236.ms',    # Original file
+      outputvis='AS2COS54-my-calib.ms',         # New file name
+      field='1',                                # Field ID of target
+      spw='0~15')                               # Only science spws
+
+
+
+
+
+
+
+
+
+# ------------------ Calibration by NRAO --------------------------
+# Done for AS2COS54
+
+# Step 1: Download from Archive
+# Expl: Search for '21A-254' or Hodge on the VLA archive (https://data.nrao.edu/portal/#/)
+#       and select the dataset (using naming file from Marta). Set the calibration 
+#       to calibrated!!! 
+
+# Step 2: Unpack the .tar file.
+# Expl: Unpack the tar file outside of CASA in a folder with the name of the source
+#       using to get the .ms file: tar zxvf 21A-254.sb39658500.eb39706045.59359.146427581014.tar.gz 
+#       and tar zxvf 21A-254.sb39658500.eb39706045.59359.146427581014.ms.tgz
+
+# Step 3: Check listobs
+# Expl: Inspect the data using the listobs function in CASA, note down which
+#       source is which calibrator, check observing dates and RA and Dec to
+#       check if source is the correct source
+
+listobs(vis="21A-254.sb39658500.eb39706045.59359.146427581014.ms")
+
+# Step 4: Inspect calibration
+# Expl: Look at corrected amp vs time and uvdist and search for weird signals and 
+#       loop trough all fields and spw's
+
+plotms(vis='21A-254.sb39658500.eb39706045.59359.146427581014.ms',   # Original file
+       xaxis='time',                            # x-axis
+       yaxis='amp',                             # y-axis
+       ydatacolumn='corrected',                 # Take new data column
+       field='0',                               # Field ID of bandpass calibrator
+       spw='0',                                 # Look at spw 0
+       correlation='RR,LL',                     # Polarizations
+       avgchannel='64',                         # Average all channels in spw
+       coloraxis='antenna1')                    # Color by antenna
+
+plotms(vis='21A-254.sb39658500.eb39706045.59359.146427581014.ms',   # Original file
+       xaxis='uvdist',                          # x-axis
+       yaxis='amp',                             # y-axis
+       ydatacolumn='corrected',                 # Take new data column
+       field='0',                               # Field ID of target
+       spw='0',                                 # Look at spw 0
+       correlation='RR,LL',                     # Polarizations
+       avgchannel='64',                         # Average all channels in spw
+       #antenna='!ea07;!ea12;!ea23', 
+       coloraxis='antenna2')                    # Color by antenna
+
+# Step 5: OPTIONAL: Flag data
+# Expl: OPTIONAL: Can be done manually in plotms for every spw. Can also be done
+#       directly in CASA with the following command
+
+flagdata(vis='21A-254.sb39658500.eb39706045.59359.146427581014.ms',
+         mode='list', 
+         inpfile=["field='0' antenna='ea01,ea21,ea18'",
+                  "field='0' antenna='ea11' spw='0'",
+                  "field='0' antenna='ea27' spw='8,9,10'"])
+
+# Step 6: OPTIONAL: Rerun tables
+# Expl: OPTIONAL: After flagging, the calibration must be reapplied. Antpos is
+#       not available for NRAO calibrated data.
+
+gaincal(vis='21A-254.sb39658500.eb39706045.59359.146427581014.ms',  # Original file
+        caltable='bpphase.gcal',                # Table to write to
+        field='2',                              # Field ID of bandpass calibrator
+        spw='0~15:20~40',                       # All spw, no edges
+        refant='ea05',                          # Refant
+        calmode='p',                            # Correct for decorrelation
+        solint='int',                           # Integration time of 10s
+        minsnr=2.0,                             # Only good solutions
+        gaintable=['unknown.session_1.caltables/21A-254.sb39658500.eb39706045.59359.146427581014.ms.hifv_priorcals.s5_2.gc.tbl',            # Gaincurve
+                   'unknown.session_1.caltables/21A-254.sb39658500.eb39706045.59359.146427581014.ms.hifv_finalcals.s13_2.finaldelay.tbl',   # Delays
+                   'unknown.session_1.caltables/21A-254.sb39658500.eb39706045.59359.146427581014.ms.hifv_priorcals.s5_3.opac.tbl'])         # Opacity
+
+bandpass(vis='21A-254.sb39658500.eb39706045.59359.146427581014.ms',     # Original dfile
+         caltable='bandpass.bcal',              # Table to write to
+         field='2',                             # Field ID of bandpass calibrator
+         refant='ea05',                         # Refant
+         solint='inf',                          # Average over scan
+         solnorm=False,                         # Do not normalize
+         gaintable=['unknown.session_1.caltables/21A-254.sb39658500.eb39706045.59359.146427581014.ms.hifv_priorcals.s5_2.gc.tbl',            # Gaincurve
+                    'unknown.session_1.caltables/21A-254.sb39658500.eb39706045.59359.146427581014.ms.hifv_finalcals.s13_2.finaldelay.tbl',   # Delays
+                    'bpphase.gcal', 
+                    'unknown.session_1.caltables/21A-254.sb39658500.eb39706045.59359.146427581014.ms.hifv_priorcals.s5_3.opac.tbl'])         # Opacity
+
+gaincal(vis='21A-254.sb39658500.eb39706045.59359.146427581014.ms',  # Original file
+        caltable='intphase.gcal',               # Table to write to
+        field='0,2',                            # Amplitude/gain and bandpass calibrator
+        spw='0~15',                             # All spws, no edges
+        solint='int',                           # Integrated time
+        refant='ea05',                          # Refant
+        minsnr=2.0,                             # Only good solutions
+        calmode='p',                            # Phase
+        gaintable=['unknown.session_1.caltables/21A-254.sb39658500.eb39706045.59359.146427581014.ms.hifv_priorcals.s5_2.gc.tbl',            # Gaincurve
+                   'unknown.session_1.caltables/21A-254.sb39658500.eb39706045.59359.146427581014.ms.hifv_finalcals.s13_2.finaldelay.tbl',   # Delays
+                   'bpphase.gcal', 
+                   'unknown.session_1.caltables/21A-254.sb39658500.eb39706045.59359.146427581014.ms.hifv_priorcals.s5_3.opac.tbl'])         # Opacity
+
+gaincal(vis='21A-254.sb39658500.eb39706045.59359.146427581014.ms',  # Original file
+        caltable='scanphase.gcal',              # Table to write to
+        field='0,2',                            # Amplitude/gain and bandpass calibrator
+        spw='0~15',                             # All spws
+        solint='inf',                           # Scan time
+        refant='ea05',                          # Refant
+        minsnr=2.0,                             # Only good solutions
+        calmode='p',                            # Phase
+        gaintable=['unknown.session_1.caltables/21A-254.sb39658500.eb39706045.59359.146427581014.ms.hifv_priorcals.s5_2.gc.tbl',            # Gaincurve
+                   'unknown.session_1.caltables/21A-254.sb39658500.eb39706045.59359.146427581014.ms.hifv_finalcals.s13_2.finaldelay.tbl',   # Delays
+                   'bpphase.gcal', 
+                   'unknown.session_1.caltables/21A-254.sb39658500.eb39706045.59359.146427581014.ms.hifv_priorcals.s5_3.opac.tbl'])         # Opacity
+
+gaincal(vis='21A-254.sb39658500.eb39706045.59359.146427581014.ms',  # Original file
+        caltable='amp.gcal',                    # Table to write to
+        field='0,2',                            # Amplitude/gain and bandpass calibrator
+        spw='0~15',                             # All spws
+        solint='inf',                           # Scan time
+        refant='ea05',                          # Refant
+        minsnr=2.0,                             # Only good solutions
+        calmode='ap',                           # Amplitude
+        gaintable=['unknown.session_1.caltables/21A-254.sb39658500.eb39706045.59359.146427581014.ms.hifv_priorcals.s5_2.gc.tbl',            # Gaincurve
+                   'unknown.session_1.caltables/21A-254.sb39658500.eb39706045.59359.146427581014.ms.hifv_priorcals.s5_3.opac.tbl',         # Opacity
+                   'unknown.session_1.caltables/21A-254.sb39658500.eb39706045.59359.146427581014.ms.hifv_finalcals.s13_2.finaldelay.tbl',   # Delays
+                   'bpphase.gcal',
+                   'intphase.gcal'])   
+
+fluxscale(vis='21A-254.sb39658500.eb39706045.59359.146427581014.ms',    # Original file
+          caltable='amp.gcal',                  # Table to write to
+          fluxtable='flux.cal',                 # Table to write to
+          reference='2',                        # Field ID of flux calibrator
+          incremental=True)                     # With increments
+
+applycal(vis='21A-254.sb39658500.eb39706045.59359.146427581014.ms',     # Original file
+         field='0',                             # Gain/phase calibrator
+         gaintable=['unknown.session_1.caltables/21A-254.sb39658500.eb39706045.59359.146427581014.ms.hifv_priorcals.s5_2.gc.tbl',            # Gaincurve
+                    'unknown.session_1.caltables/21A-254.sb39658500.eb39706045.59359.146427581014.ms.hifv_priorcals.s5_3.opac.tbl',         # Opacity
+                    'unknown.session_1.caltables/21A-254.sb39658500.eb39706045.59359.146427581014.ms.hifv_finalcals.s13_2.finaldelay.tbl',   # Delays
+                    'bandpass.bcal',
+                    'intphase.gcal',
+                    'amp.gcal',
+                    'flux.cal'],
+         gainfield=['','','2','2','0','0','0'], # Field ID's for tables 
+         calwt=False)                           # Do not weigh?
+
+applycal(vis='21A-254.sb39658500.eb39706045.59359.146427581014.ms',     # Original file
+         field='2',                             # Flux/bandpass calibrator
+         gaintable=['unknown.session_1.caltables/21A-254.sb39658500.eb39706045.59359.146427581014.ms.hifv_priorcals.s5_2.gc.tbl',            # Gaincurve
+                    'unknown.session_1.caltables/21A-254.sb39658500.eb39706045.59359.146427581014.ms.hifv_priorcals.s5_3.opac.tbl',          # Opacity
+                    'unknown.session_1.caltables/21A-254.sb39658500.eb39706045.59359.146427581014.ms.hifv_finalcals.s13_2.finaldelay.tbl',   # Delays
+                    'bandpass.bcal',
+                    'intphase.gcal',
+                    'amp.gcal',                    
+                    'flux.cal'],
+         gainfield=['','','2','2','2','2','2'], # Field ID's for tables
+         calwt=False)                           # Do not weigh?
+
+applycal(vis='21A-254.sb39658500.eb39706045.59359.146427581014.ms',     # Original file
+         field='1',                             # Target source field
+         gaintable=['unknown.session_1.caltables/21A-254.sb39658500.eb39706045.59359.146427581014.ms.hifv_priorcals.s5_2.gc.tbl',            # Gaincurve
+                    'unknown.session_1.caltables/21A-254.sb39658500.eb39706045.59359.146427581014.ms.hifv_priorcals.s5_3.opac.tbl',          # Opacity
+                    'unknown.session_1.caltables/21A-254.sb39658500.eb39706045.59359.146427581014.ms.hifv_finalcals.s13_2.finaldelay.tbl',   # Delays
+                    'bandpass.bcal',
+                    'scanphase.gcal',
+                    'amp.gcal',
+                    'flux.cal'],  # Opacity omitted
+         gainfield=['','','2','2','0','0','0'], # Field ID's for tables
+         calwt=False)                           # Do not weigh?
+
+# Step 7: Split out the object
+# Expl: Only take the data of the target object
+
+split(vis='21A-254.sb39658500.eb39706045.59359.146427581014.ms',    # Original file
+      outputvis='AS2COS44-calib-NRAO-me.ms',    # New file name
+      field='1',                                # Field ID of target
+      spw='0~15')                               # Only science spws
+
+
+
+
+
+
+
+
+
 # ------------------ Imaging --------------------------
 # Done for AS2UDS10.ms, received from Marta. Both observations were already
 # calibrated and merged.
@@ -316,7 +596,34 @@ split(vis='as2uds10.ms',                        # Original file
 
 listobs(vis="as2uds10.ms.split")
 
-# Step 4: Make a dirty continuum image
+# Step 4: Compare expected noise with the observed noise
+# Expl: The expected noise is stated in the observing proposal. If there is a big
+#       difference, the NRAO calibration is off, or something else is going wrong
+
+tclean(vis = 'as2uds10.ms.split',               # Original file (+.constsub if step 5 is taken)
+       imagename='as2uds10_128_05_100.split.noise',     # Destination file
+       imsize=128,                              # How many pixels
+       cell='0.5arcsec',                        # Size of pixel
+       width='100km/s',                         # Width of channel
+       specmode='mfs',                         # Line imaging
+       spw='9:5~58,11:5~58',                              # spw's where line is located
+       restfreq='87.5386MHz',                 # Set CO(1-0) restfreq=115.271203GHz/(1+z)
+       reffreq='87.5386MHz',                  # Where 0km/s is defined, is the same
+       mask='/data1/jjansen/MP_mask_6arcseconds.crtf',  # Predefined mask of 6" radius on centre pixel
+       niter=1000000,                           # Some big number
+       nsigma=1.0,                              # Stop cleaning at 1sigma
+       fastnoise=False,                         # Noise estimation from data
+       pblimit=-0.01,                           # Primary beam gain, - for no cor
+       interactive=True)                        # We want to draw the mask ourself
+
+
+# Step 5: Export and compare
+# Expl: Make fits file and load this into "Compare_expected_noise.py"
+
+exportfits(imagename='AS2COS44-calib-NRAO-me.split.noise.image',   # Original file 
+           fitsimage='AS2COS44-calib-NRAO-me.split.noise.image.fits')  # Destination file 
+
+# Step 6: Make a dirty continuum image
 # Expl: We use the dirty image to see if there is a continuum by selecting the
 #       spw's on both sides of the line spw. The image can be seen using imview.
 
@@ -328,7 +635,7 @@ tclean(vis='as2uds10.ms.split',                 # Original file
        pblimit=-0.01,                           # Primary beam gain, - for no cor
        niter=0)                                 # No cleaning for dirty image
 
-# Step 5: OPTIONAL: UV continuum subtraction
+# Step 7: OPTIONAL: UV continuum subtraction
 # Expl: OPTIONAL: We could substract the continuum from the data. Normally we would deselect
 #       the line, but our lines are very faint. We deselected the outer spws and
 #       the edge channels of spws, because these have much noise. Only do this is
@@ -340,12 +647,12 @@ uvcontsub(vis='as2uds10.ms.split',              # Original file
           excludechans=True,                    # We want to exclude above chans
           want_cont=False)                      # Makes a continuum image
 
-# Step 6: Load in physical parameters
+# Step 8: Load in physical parameters
 # Expl: For the next step and the steps hereafter, we need the redshift and FWHM.
 #       Find these using Birkin 2021 et al. table 2, open with file Read_Table_2_Birkin_2021
 
 
-# Step 7: Cleaning
+# Step 9: Cleaning
 # Expl: Using the tclean method in CASA, we can try to suppress the noise around
 #       the oject. We draw a mask of 6" using the interactive cleaning method and 
 #       clean to a leven of 1sigma, because we have a low SNR.
@@ -367,7 +674,7 @@ tclean(vis = 'as2uds10.ms.split',               # Original file (+.constsub if s
        pblimit=-0.01,                           # Primary beam gain, - for no cor
        interactive=True)                        # We want to draw the mask ourself
 
-# Step 8: 0-th moment map
+# Step 10: 0-th moment map
 # Expl: We make an integrated intensity map by collapsing the cube. This should
 #       look something like Marta's right figures in her figure 2 of Frias Castillo
 #       et al. 2023. For the channels to collapse we look at the FWHM found in step
@@ -379,19 +686,19 @@ immoments(imagename='as2uds10_128_05_100.split.cube.image',     # Original file
           moments=0,                            # Moment 0
           outfile='as2uds10_128_05_100.split.cube.image.mom0')  # Destination file
 
-# Step 9: fits file of .mom0 map
+# Step 11: fits file of .mom0 map
 # Expl: Make a file to read to make a figure of the .mom0 map
 
 exportfits(imagename='as2uds10_128_05_100.split.cube.image.mom0',   # Original file
            fitsimage='as2uds10_128_05_100.split.cube.image.mom0.fits')  # Destination file
 
-# Step 10: fits file of .cube map
+# Step 12: fits file of .cube map
 # Expl: Make a file to read the RMS per channel using the .cube image
 
 exportfits(imagename='as2uds10_128_05_100.split.cube.image',   # Original file
            fitsimage='as2uds10_128_05_100.split.cube.image.fits')  # Destination file
 
-# Step 11: Get out the profile
+# Step 13: Get out the profile
 # Expl: Imview the .mom0 file in imview spectral profile tool and load in the region
 #       with 2.5 arcsec radius (already made). Center it on brightest the pixel
 #       Set x to velocity and y to flux density. Then, save profile as .txt file. 

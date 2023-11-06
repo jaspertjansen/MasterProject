@@ -69,22 +69,23 @@ def MakePlot(File, Title, Name, Save):
         
     return RMS
     
-def MakeProfile(File, RMS_file, Titel, Name, Save):
+def MakeProfile(File, RMS_file, Titel, Name, Nbeam, Abeam, Save):
         
     Table  = open(File)
         
     FITSFile = fits.open(RMS_file, lazy_load_hdu=True)
     Data = FITSFile[0].data[0]
-    Header = FITSFile[0].header
     FITSFile.close()
-    
+        
     RMS = np.zeros(len(Data))
     for i in range(len(Data)):
         RMS[i] = np.nanstd(Data[i])*1e3
     RMS[RMS<=0.0]=np.nan
     RMS_mean = np.nanmean(RMS)
     print ("Mean RMS = ", RMS_mean, "mJy/beam")
-    print(RMS)
+    RMS=RMS*np.sqrt(Nbeam/Abeam)
+    RMS_mean = np.nanmean(RMS)
+    print("Mean RMS = ", RMS_mean, "mJy/pix")
     
     Vel, Flux = np.genfromtxt(Table, unpack=True)
     Table.close()
@@ -153,23 +154,59 @@ Cont_name = 'D:\\Master Astronomy Research year 2\\Master Project\\fig_cont_AS2U
 Profile_name = 'D:\\Master Astronomy Research year 2\\Master Project\\fig_profile_AS2UDS010.0_v2.png'
 Title= 'AS2UDS010.0'
 
+Nbeam = 69
+Abeam = 54.7933
+
 RMS_AS2UD10 = MakePlot(Fits_mom0_name, Title, Cont_name, Savecondition)
-FWHM_AS2UD10 = MakeProfile(Txt_name, Fits_cube_name, Title, Profile_name, Savecondition)
+FWHM_AS2UD10 = MakeProfile(Txt_name, Fits_cube_name, Title, Profile_name, Nbeam, Abeam, Savecondition)
 
 #%%
 
-Fits_name = 'D:\\Master Astronomy Research year 2\\Master Project\\Moment_zero_images\\as2cos23-calib_128_05_100.split.cube.image.mom0.fits'
+Fits_mom0_name = 'D:\\Master Astronomy Research year 2\\Master Project\\Moment_zero_images\\as2cos23-calib_128_05_100.split.cube.image.mom0.fits'
+Fits_cube_name = 'D:\\Master Astronomy Research year 2\\Master Project\\Profiles\\as2cos23-calib_128_05_100.split.cube.image.fits'
 Txt_name = 'D:\\Master Astronomy Research year 2\\Master Project\\Profiles\\spectral_profile_as2cos23.txt'
 Cont_name = 'D:\\Master Astronomy Research year 2\\Master Project\\fig_cont_AS2COS0023.1.png'
 Profile_name = 'D:\\Master Astronomy Research year 2\\Master Project\\fig_profile_AS2COS0023.1.png'
 Title= 'AS2COS0023.1'
 
-RMS_AS2COS23 = MakePlot(Fits_name, Title, Cont_name, Savecondition)
-FWHM_AS2COS23 = MakeProfile(Txt_name, Title, Profile_name, Savecondition)
+Nbeam = 1
+Abeam = 1
+
+RMS_AS2COS23 = MakePlot(Fits_mom0_name, Title, Cont_name, Savecondition)
+FWHM_AS2COS23 = MakeProfile(Txt_name, Fits_cube_name, Title, Profile_name, Nbeam, Abeam, Savecondition)
 
 
 #%%
 
+Fits_mom0_name = 'D:\\Master Astronomy Research year 2\\Master Project\\Moment_zero_images\\AS2COS54-my-calib.split.cube.image.mom0.fits'
+Fits_cube_name = 'D:\\Master Astronomy Research year 2\\Master Project\\Profiles\\AS2COS54-my-calib.split.cube.image.fits'
+Txt_name = 'D:\\Master Astronomy Research year 2\\Master Project\\Profiles\\spectral_profile_AS2COS54-my-calib.txt'
+Cont_name = 'D:\\Master Astronomy Research year 2\\Master Project\\fig_cont_AS2COS54-my-calib.png'
+Profile_name = 'D:\\Master Astronomy Research year 2\\Master Project\\fig_profile_AS2COS54-my-calib.png'
+Title= 'AS2COS0054.1 my calib'
+
+Nbeam = 81
+Abeam = 53.4958
+
+RMS_AS2COS54_my_calib = MakePlot(Fits_mom0_name, Title, Cont_name, Savecondition)
+FWHM_AS2COS54_my_calib = MakeProfile(Txt_name, Fits_cube_name, Title, Profile_name, Nbeam, Abeam, Savecondition)
+
+#%%
+
+Fits_mom0_name = 'D:\\Master Astronomy Research year 2\\Master Project\\Moment_zero_images\\AS2COS54-NRAO-calib.split.cube.image.mom0.fits'
+Fits_cube_name = 'D:\\Master Astronomy Research year 2\\Master Project\\Profiles\\AS2COS54-NRAO-calib.split.cube.image.fits'
+Txt_name = 'D:\\Master Astronomy Research year 2\\Master Project\\Profiles\\spectral_profile_AS2COS54-NRAO-calib.txt'
+Cont_name = 'D:\\Master Astronomy Research year 2\\Master Project\\fig_cont_AS2COS54-NRAO-calib.png'
+Profile_name = 'D:\\Master Astronomy Research year 2\\Master Project\\fig_profile_AS2COS54-NRAO-calib.png'
+Title= 'AS2COS0054.1 NRAO calib'
+
+Nbeam = 1
+Abeam = 1
+
+RMS_AS2COS54_NRAO_calib = MakePlot(Fits_mom0_name, Title, Cont_name, Savecondition)
+FWHM_AS2COS54_NRAO_calib = MakeProfile(Txt_name, Fits_cube_name, Title, Profile_name, Nbeam, Abeam, Savecondition)
+
+#%%
 
 # perr = np.sqrt(np.diag(pcov))
 # (perr[2]/popt[2])*fwhm
