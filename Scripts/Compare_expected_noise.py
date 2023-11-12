@@ -16,7 +16,7 @@ def ReadFITS(FileName):
     FITSFile.close()
     return Data, Header
 
-File = 'D:\\Master Astronomy Research year 2\\Master Project\\Noise\\AS2COS44-calib-NRAO-me.split.noise.image.fits'
+File = 'D:\\Master Astronomy Research year 2\\Master Project\\Noise\\AS2COS44-calib-only-NRAO.split.noise.image.fits'
 
 Data, Header = ReadFITS(File)
 

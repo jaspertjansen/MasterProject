@@ -208,9 +208,18 @@ FWHM_AS2COS54_NRAO_calib = MakeProfile(Txt_name, Fits_cube_name, Title, Profile_
 
 #%%
 
-# perr = np.sqrt(np.diag(pcov))
-# (perr[2]/popt[2])*fwhm
-# Leave one out analysis Jackknife
-# https://mathematica.stackexchange.com/questions/185024/error-propagation-in-finding-full-width-at-half-maximum
+Fits_mom0_name = 'D:\\Master Astronomy Research year 2\\Master Project\\Moment_zero_images\\AS2COS44-calib-only-NRAO.split.cube.image.mom0.fits'
+Fits_cube_name = 'D:\\Master Astronomy Research year 2\\Master Project\\Profiles\\AS2COS44-calib-only-NRAO.split.cube.image.fits'
+Txt_name = 'D:\\Master Astronomy Research year 2\\Master Project\\Profiles\\spectral_profile_AS2COS44_only_NRAO.txt'
+Cont_name = 'D:\\Master Astronomy Research year 2\\Master Project\\fig_cont_AS2COS44_only_NRAO.png'
+Profile_name = 'D:\\Master Astronomy Research year 2\\Master Project\\fig_profile_AS2COS44_only_NRAO.png'
+Title= 'AS2COS0044.1 oN'
+
+Nbeam = 81
+Abeam = 44.891
+
+RMS_AS2UD10 = MakePlot(Fits_mom0_name, Title, Cont_name, Savecondition)
+FWHM_AS2UD10 = MakeProfile(Txt_name, Fits_cube_name, Title, Profile_name, Nbeam, Abeam, Savecondition)
+
 
 

@@ -47,7 +47,7 @@ plotms(vis='21A-254.sb39393798.eb39561560.59308.094199803236.ms', # Original fil
        yaxis='elevation',                       # y-axis
        correlation='RR,LL',                     # All polarizations
        avgchannel='64',                         # 64 channels in a spw
-       spw='0:4~60',                            # Just choose a random spw
+       spw='0',                            # Just choose a random spw
        coloraxis='field')                       # Sources have different color
 
 # Step 7: Inspect amplitude
@@ -59,7 +59,7 @@ plotms(vis='21A-254.sb39393798.eb39561560.59308.094199803236.ms',   # Original f
        yaxis='amp',                             # y-axis
        correlation='RR,LL',                     # All polarizations
        avgchannel='64',                         # 64 channels in a spw
-       spw='0:4~60',                            # Just choose a random spw
+       spw='0',                            # Just choose a random spw
        coloraxis='field')                       # Sources have different color
 
 # Step 8: OPTIONAL: Flag antennas
@@ -137,7 +137,7 @@ gaincal(vis='21A-254.sb39393798.eb39561560.59308.094199803236.ms',  # Original f
         field='2',                              # Field ID of bandpass calibrator
         refant='ea05',                          # Refant
         gaintype='K',                           # Delay
-        gaintable=['antpos.cal','gaincurve.cal','opacity.cal'])     # Opacity might not be available
+        gaintable=['antpos.cal','gaincurve.cal','opacity.cal'])     # Caltables
 
 # Step 15: Bandpass calibration
 # Expl: First correct for decorrelation, and inspect the result, then apply phase 
@@ -151,7 +151,7 @@ gaincal(vis='21A-254.sb39393798.eb39561560.59308.094199803236.ms',  # Original f
         calmode='p',                            # Correct for decorrelation
         solint='int',                           # Integration time of 10s
         minsnr=2.0,                             # Only good solutions
-        gaintable=['antpos.cal','gaincurve.cal','delays.cal', 'opacity.cal'])  # Opacity might not be available
+        gaintable=['antpos.cal','gaincurve.cal','delays.cal', 'opacity.cal'])  # Caltables
 
 plotms(vis='bpphase.gcal',                      # Solution to inspect
        gridrows=3,                              # Figure rows
@@ -162,13 +162,13 @@ plotms(vis='bpphase.gcal',                      # Solution to inspect
        coloraxis='corr',                        # RR, LL, etc.
        plotrange=[0,0,-180,180])                # Full phase
 
-bandpass(vis='21A-254.sb39393798.eb39561560.59308.094199803236.ms',     # Original dfile
+bandpass(vis='21A-254.sb39393798.eb39561560.59308.094199803236.ms',     # Original file
          caltable='bandpass.bcal',              # Table to write to
          field='2',                             # Field ID of bandpass calibrator
          refant='ea05',                         # Refant
          solint='inf',                          # Average over scan
          solnorm=False,                         # Do not normalize
-         gaintable=['antpos.cal','gaincurve.cal','delays.cal','bpphase.gcal', 'opacity.cal'])   # Opacity might not be available
+         gaintable=['antpos.cal','gaincurve.cal','delays.cal','bpphase.gcal', 'opacity.cal'])   # Caltables
 
 # Step 16: Phase solution on integrated time
 # Expl: Solve and inspect for antenna-based phase and amplitude gain calibration.
@@ -176,12 +176,12 @@ bandpass(vis='21A-254.sb39393798.eb39561560.59308.094199803236.ms',     # Origin
 gaincal(vis='21A-254.sb39393798.eb39561560.59308.094199803236.ms',  # Original file
         caltable='intphase.gcal',               # Table to write to
         field='0,2',                            # Amplitude/gain and bandpass calibrator
-        spw='0~15:4~60',                        # All spws, no edges
+        spw='0~15',                        # All spws, no edges
         solint='int',                           # Integrated time
         refant='ea05',                          # Refant
         minsnr=2.0,                             # Only good solutions
         calmode='p',                            # Phase
-        gaintable=['antpos.cal','gaincurve.cal','delays.cal','bandpass.bcal', 'opacity.cal'])   # Opacity might not be available
+        gaintable=['antpos.cal','gaincurve.cal','delays.cal','bandpass.bcal', 'opacity.cal'])   # Caltables
 
 plotms(vis='intphase.gcal',                     # Solution to inspect
        gridrows=3,                              # Figure rows
@@ -198,12 +198,12 @@ plotms(vis='intphase.gcal',                     # Solution to inspect
 gaincal(vis='21A-254.sb39393798.eb39561560.59308.094199803236.ms',  # Original file
         caltable='scanphase.gcal',              # Table to write to
         field='0,2',                            # Amplitude/gain and bandpass calibrator
-        spw='0~15:4~60',                        # All spws, no edges
+        spw='0~15',                        # All spws, no edges
         solint='inf',                           # Scan time
         refant='ea05',                          # Refant
         minsnr=2.0,                             # Only good solutions
         calmode='p',                            # Phase
-        gaintable=['antpos.cal','gaincurve.cal','delays.cal','bandpass.bcal', 'opacity.cal'])   # Opacity might not be available
+        gaintable=['antpos.cal','gaincurve.cal','delays.cal','bandpass.bcal', 'opacity.cal'])   # Caltables
 
 plotms(vis='scanphase.gcal',                    # Solution to inspect
        gridrows=3,                              # Figure rows
@@ -221,12 +221,12 @@ plotms(vis='scanphase.gcal',                    # Solution to inspect
 gaincal(vis='21A-254.sb39393798.eb39561560.59308.094199803236.ms',  # Original file
         caltable='amp.gcal',                    # Table to write to
         field='0,2',                            # Amplitude/gain and bandpass calibrator
-        spw='0~15:4~60',                        # All spws, no edges
+        spw='0~15',                        # All spws, no edges
         solint='inf',                           # Scan time
         refant='ea05',                          # Refant
         minsnr=2.0,                             # Only good solutions
         calmode='ap',                           # Amplitude
-        gaintable=['antpos.cal','gaincurve.cal','opacity.cal','delays.cal','bandpass.bcal','intphase.gcal'])    # Opacity might not be available
+        gaintable=['antpos.cal','gaincurve.cal','opacity.cal','delays.cal','bandpass.bcal','intphase.gcal'])    # Caltables
 
 plotms(vis='amp.gcal',                          # Solution to inspect
        gridrows=3,                              # Figure rows
@@ -252,19 +252,19 @@ fluxscale(vis='21A-254.sb39393798.eb39561560.59308.094199803236.ms',    # Origin
 
 applycal(vis='21A-254.sb39393798.eb39561560.59308.094199803236.ms',     # Original file
          field='0',                             # Gain/phase calibrator
-         gaintable=['antpos.cal','gaincurve.cal','opacity.cal','delays.cal','bandpass.bcal','intphase.gcal','amp.gcal','flux.cal'],
+         gaintable=['antpos.cal','gaincurve.cal','opacity.cal','delays.cal','bandpass.bcal','intphase.gcal','amp.gcal','flux.cal'],     # Caltables
          gainfield=['','','','2','2','0','0','0'], # Field ID's for tables 
          calwt=False)                           # Do not weigh?
 
 applycal(vis='21A-254.sb39393798.eb39561560.59308.094199803236.ms',     # Original file
          field='2',                             # Flux/bandpass calibrator
-         gaintable=['antpos.cal','gaincurve.cal','opacity.cal','delays.cal','bandpass.bcal','intphase.gcal','amp.gcal','flux.cal'],   # Opacity omitted
+         gaintable=['antpos.cal','gaincurve.cal','opacity.cal','delays.cal','bandpass.bcal','intphase.gcal','amp.gcal','flux.cal'],     # Caltables
          gainfield=['','','','2','2','2','2','2'], # Field ID's for tables
          calwt=False)                           # Do not weigh?
 
 applycal(vis='21A-254.sb39393798.eb39561560.59308.094199803236.ms',     # Original file
          field='1',                             # Target source field
-         gaintable=['antpos.cal','gaincurve.cal','opacity.cal','delays.cal','bandpass.bcal','scanphase.gcal','amp.gcal','flux.cal'],  # Opacity omitted
+         gaintable=['antpos.cal','gaincurve.cal','opacity.cal','delays.cal','bandpass.bcal','scanphase.gcal','amp.gcal','flux.cal'],    # Caltables
          gainfield=['','','','2','2','0','0','0'], # Field ID's for tables
          calwt=False)                           # Do not weigh?
 
@@ -276,7 +276,7 @@ plotms(vis='21A-254.sb39393798.eb39561560.59308.094199803236.ms',   # Original f
        yaxis='amp',                             # y-axis
        ydatacolumn='corrected',                 # Take new data column
        field='2',                               # Field ID of bandpass calibrator
-       spw='10:4~60',                           # Look at spw 10
+       spw='10',                           # Look at spw 10
        correlation='RR,LL',                     # Polarizations
        avgchannel='64',                         # Average all channels in spw
        coloraxis='antenna1')                    # Color by antenna
@@ -286,7 +286,7 @@ plotms(vis='21A-254.sb39393798.eb39561560.59308.094199803236.ms',   # Original f
        yaxis='amp',                             # y-axis
        ydatacolumn='corrected',                 # Take new data column
        field='1',                               # Field ID of target
-       spw='10:4~60',                           # Look at spw 10
+       spw='10',                           # Look at spw 10
        correlation='RR,LL',                     # Polarizations
        avgchannel='64',                         # Average all channels in spw
        #antenna='!ea07;!ea12;!ea23', 
@@ -311,7 +311,7 @@ gaincal(vis='21A-254.sb39393798.eb39561560.59308.094199803236.ms',  # Original f
         calmode='p',                            # Correct for decorrelation
         solint='int',                           # Integration time of 10s
         minsnr=2.0,                             # Only good solutions
-        gaintable=['antpos.cal','gaincurve.cal','delays.cal', 'opacity.cal'])  # Opacity might not be available
+        gaintable=['antpos.cal','gaincurve.cal','delays.cal', 'opacity.cal'])  # Caltables
 
 bandpass(vis='21A-254.sb39393798.eb39561560.59308.094199803236.ms',     # Original dfile
          caltable='bandpass.bcal',              # Table to write to
@@ -319,37 +319,37 @@ bandpass(vis='21A-254.sb39393798.eb39561560.59308.094199803236.ms',     # Origin
          refant='ea05',                         # Refant
          solint='inf',                          # Average over scan
          solnorm=False,                         # Do not normalize
-         gaintable=['antpos.cal','gaincurve.cal','delays.cal','bpphase.gcal', 'opacity.cal'])   # Opacity might not be available
+         gaintable=['antpos.cal','gaincurve.cal','delays.cal','bpphase.gcal', 'opacity.cal'])   # Caltables
 
 gaincal(vis='21A-254.sb39393798.eb39561560.59308.094199803236.ms',  # Original file
         caltable='intphase.gcal',               # Table to write to
         field='0,2',                            # Amplitude/gain and bandpass calibrator
-        spw='0~15:4~60',                        # All spws, no edges
+        spw='0~15',                        # All spws, no edges
         solint='int',                           # Integrated time
         refant='ea05',                          # Refant
         minsnr=2.0,                             # Only good solutions
         calmode='p',                            # Phase
-        gaintable=['antpos.cal','gaincurve.cal','delays.cal','bandpass.bcal', 'opacity.cal'])   # Opacity might not be available
+        gaintable=['antpos.cal','gaincurve.cal','delays.cal','bandpass.bcal', 'opacity.cal'])   # Caltables
 
 gaincal(vis='21A-254.sb39393798.eb39561560.59308.094199803236.ms',  # Original file
         caltable='scanphase.gcal',              # Table to write to
         field='0,2',                            # Amplitude/gain and bandpass calibrator
-        spw='0~15:4~60',                        # All spws, no edges
+        spw='0~15',                        # All spws, no edges
         solint='inf',                           # Scan time
         refant='ea05',                          # Refant
         minsnr=2.0,                             # Only good solutions
         calmode='p',                            # Phase
-        gaintable=['antpos.cal','gaincurve.cal','delays.cal','bandpass.bcal', 'opacity.cal'])   # Opacity might not be available
+        gaintable=['antpos.cal','gaincurve.cal','delays.cal','bandpass.bcal', 'opacity.cal'])   # Caltables
 
 gaincal(vis='21A-254.sb39393798.eb39561560.59308.094199803236.ms',  # Original file
         caltable='amp.gcal',                    # Table to write to
         field='0,2',                            # Amplitude/gain and bandpass calibrator
-        spw='0~15:4~60',                        # All spws, no edges
+        spw='0~15',                        # All spws, no edges
         solint='inf',                           # Scan time
         refant='ea05',                          # Refant
         minsnr=2.0,                             # Only good solutions
         calmode='ap',                           # Amplitude
-        gaintable=['antpos.cal','gaincurve.cal','opacity.cal','delays.cal','bandpass.bcal','intphase.gcal'])    # Opacity might not be available
+        gaintable=['antpos.cal','gaincurve.cal','opacity.cal','delays.cal','bandpass.bcal','intphase.gcal'])    # Caltables
 
 fluxscale(vis='21A-254.sb39393798.eb39561560.59308.094199803236.ms',    # Original file
           caltable='amp.gcal',                  # Table to write to
@@ -359,19 +359,19 @@ fluxscale(vis='21A-254.sb39393798.eb39561560.59308.094199803236.ms',    # Origin
 
 applycal(vis='21A-254.sb39393798.eb39561560.59308.094199803236.ms',     # Original file
          field='0',                             # Gain/phase calibrator
-         gaintable=['antpos.cal','gaincurve.cal','opacity.cal','delays.cal','bandpass.bcal','intphase.gcal','amp.gcal','flux.cal'],
+         gaintable=['antpos.cal','gaincurve.cal','opacity.cal','delays.cal','bandpass.bcal','intphase.gcal','amp.gcal','flux.cal'],     # Caltables
          gainfield=['','','','2','2','0','0','0'], # Field ID's for tables 
          calwt=False)                           # Do not weigh?
 
 applycal(vis='21A-254.sb39393798.eb39561560.59308.094199803236.ms',     # Original file
          field='2',                             # Flux/bandpass calibrator
-         gaintable=['antpos.cal','gaincurve.cal','opacity.cal','delays.cal','bandpass.bcal','intphase.gcal','amp.gcal','flux.cal'],   # Opacity omitted
+         gaintable=['antpos.cal','gaincurve.cal','opacity.cal','delays.cal','bandpass.bcal','intphase.gcal','amp.gcal','flux.cal'],     # Caltables
          gainfield=['','','','2','2','2','2','2'], # Field ID's for tables
          calwt=False)                           # Do not weigh?
 
 applycal(vis='21A-254.sb39393798.eb39561560.59308.094199803236.ms',     # Original file
          field='1',                             # Target source field
-         gaintable=['antpos.cal','gaincurve.cal','opacity.cal','delays.cal','bandpass.bcal','scanphase.gcal','amp.gcal','flux.cal'],  # Opacity omitted
+         gaintable=['antpos.cal','gaincurve.cal','opacity.cal','delays.cal','bandpass.bcal','scanphase.gcal','amp.gcal','flux.cal'],    # Caltables
          gainfield=['','','','2','2','0','0','0'], # Field ID's for tables
          calwt=False)                           # Do not weigh?
 
@@ -392,7 +392,7 @@ split(vis='21A-254.sb39393798.eb39561560.59308.094199803236.ms',    # Original f
 
 
 # ------------------ Calibration by NRAO --------------------------
-# Done for AS2COS54
+# Done for AS2COS44
 
 # Step 1: Download from Archive
 # Expl: Search for '21A-254' or Hodge on the VLA archive (https://data.nrao.edu/portal/#/)
@@ -401,8 +401,8 @@ split(vis='21A-254.sb39393798.eb39561560.59308.094199803236.ms',    # Original f
 
 # Step 2: Unpack the .tar file.
 # Expl: Unpack the tar file outside of CASA in a folder with the name of the source
-#       using to get the .ms file: tar zxvf 21A-254.sb39658500.eb39706045.59359.146427581014.tar.gz 
-#       and tar zxvf 21A-254.sb39658500.eb39706045.59359.146427581014.ms.tgz
+#       using to get the .ms file: tar zxvf 21A-254.sb39658500.eb39706045.59359.146427581014.1457794619.tar.gz 
+#       and sometimes also tar zxvf 21A-254.sb39658500.eb39706045.59359.146427581014.ms.tgz
 
 # Step 3: Check listobs
 # Expl: Inspect the data using the listobs function in CASA, note down which
@@ -460,9 +460,10 @@ gaincal(vis='21A-254.sb39658500.eb39706045.59359.146427581014.ms',  # Original f
         minsnr=2.0,                             # Only good solutions
         gaintable=['unknown.session_1.caltables/21A-254.sb39658500.eb39706045.59359.146427581014.ms.hifv_priorcals.s5_2.gc.tbl',            # Gaincurve
                    'unknown.session_1.caltables/21A-254.sb39658500.eb39706045.59359.146427581014.ms.hifv_finalcals.s13_2.finaldelay.tbl',   # Delays
+                   'unknown.session_1.caltables/21A-254.sb39658500.eb39706045.59359.146427581014.ms.hifv_priorcals.s5_4.rq.tbl',
                    'unknown.session_1.caltables/21A-254.sb39658500.eb39706045.59359.146427581014.ms.hifv_priorcals.s5_3.opac.tbl'])         # Opacity
 
-bandpass(vis='21A-254.sb39658500.eb39706045.59359.146427581014.ms',     # Original dfile
+bandpass(vis='21A-254.sb39658500.eb39706045.59359.146427581014.ms',     # Original file
          caltable='bandpass.bcal',              # Table to write to
          field='2',                             # Field ID of bandpass calibrator
          refant='ea05',                         # Refant
@@ -471,6 +472,7 @@ bandpass(vis='21A-254.sb39658500.eb39706045.59359.146427581014.ms',     # Origin
          gaintable=['unknown.session_1.caltables/21A-254.sb39658500.eb39706045.59359.146427581014.ms.hifv_priorcals.s5_2.gc.tbl',            # Gaincurve
                     'unknown.session_1.caltables/21A-254.sb39658500.eb39706045.59359.146427581014.ms.hifv_finalcals.s13_2.finaldelay.tbl',   # Delays
                     'bpphase.gcal', 
+                    'unknown.session_1.caltables/21A-254.sb39658500.eb39706045.59359.146427581014.ms.hifv_priorcals.s5_4.rq.tbl',
                     'unknown.session_1.caltables/21A-254.sb39658500.eb39706045.59359.146427581014.ms.hifv_priorcals.s5_3.opac.tbl'])         # Opacity
 
 gaincal(vis='21A-254.sb39658500.eb39706045.59359.146427581014.ms',  # Original file
@@ -484,6 +486,7 @@ gaincal(vis='21A-254.sb39658500.eb39706045.59359.146427581014.ms',  # Original f
         gaintable=['unknown.session_1.caltables/21A-254.sb39658500.eb39706045.59359.146427581014.ms.hifv_priorcals.s5_2.gc.tbl',            # Gaincurve
                    'unknown.session_1.caltables/21A-254.sb39658500.eb39706045.59359.146427581014.ms.hifv_finalcals.s13_2.finaldelay.tbl',   # Delays
                    'bpphase.gcal', 
+                   'unknown.session_1.caltables/21A-254.sb39658500.eb39706045.59359.146427581014.ms.hifv_priorcals.s5_4.rq.tbl',
                    'unknown.session_1.caltables/21A-254.sb39658500.eb39706045.59359.146427581014.ms.hifv_priorcals.s5_3.opac.tbl'])         # Opacity
 
 gaincal(vis='21A-254.sb39658500.eb39706045.59359.146427581014.ms',  # Original file
@@ -497,6 +500,7 @@ gaincal(vis='21A-254.sb39658500.eb39706045.59359.146427581014.ms',  # Original f
         gaintable=['unknown.session_1.caltables/21A-254.sb39658500.eb39706045.59359.146427581014.ms.hifv_priorcals.s5_2.gc.tbl',            # Gaincurve
                    'unknown.session_1.caltables/21A-254.sb39658500.eb39706045.59359.146427581014.ms.hifv_finalcals.s13_2.finaldelay.tbl',   # Delays
                    'bpphase.gcal', 
+                   'unknown.session_1.caltables/21A-254.sb39658500.eb39706045.59359.146427581014.ms.hifv_priorcals.s5_4.rq.tbl',
                    'unknown.session_1.caltables/21A-254.sb39658500.eb39706045.59359.146427581014.ms.hifv_priorcals.s5_3.opac.tbl'])         # Opacity
 
 gaincal(vis='21A-254.sb39658500.eb39706045.59359.146427581014.ms',  # Original file
@@ -506,11 +510,12 @@ gaincal(vis='21A-254.sb39658500.eb39706045.59359.146427581014.ms',  # Original f
         solint='inf',                           # Scan time
         refant='ea05',                          # Refant
         minsnr=2.0,                             # Only good solutions
-        calmode='ap',                           # Amplitude
+        calmode='ap',                           # Amplitude and phase
         gaintable=['unknown.session_1.caltables/21A-254.sb39658500.eb39706045.59359.146427581014.ms.hifv_priorcals.s5_2.gc.tbl',            # Gaincurve
                    'unknown.session_1.caltables/21A-254.sb39658500.eb39706045.59359.146427581014.ms.hifv_priorcals.s5_3.opac.tbl',         # Opacity
                    'unknown.session_1.caltables/21A-254.sb39658500.eb39706045.59359.146427581014.ms.hifv_finalcals.s13_2.finaldelay.tbl',   # Delays
                    'bpphase.gcal',
+                   'unknown.session_1.caltables/21A-254.sb39658500.eb39706045.59359.146427581014.ms.hifv_priorcals.s5_4.rq.tbl',
                    'intphase.gcal'])   
 
 fluxscale(vis='21A-254.sb39658500.eb39706045.59359.146427581014.ms',    # Original file
@@ -523,36 +528,39 @@ applycal(vis='21A-254.sb39658500.eb39706045.59359.146427581014.ms',     # Origin
          field='0',                             # Gain/phase calibrator
          gaintable=['unknown.session_1.caltables/21A-254.sb39658500.eb39706045.59359.146427581014.ms.hifv_priorcals.s5_2.gc.tbl',            # Gaincurve
                     'unknown.session_1.caltables/21A-254.sb39658500.eb39706045.59359.146427581014.ms.hifv_priorcals.s5_3.opac.tbl',         # Opacity
+                    'unknown.session_1.caltables/21A-254.sb39658500.eb39706045.59359.146427581014.ms.hifv_priorcals.s5_4.rq.tbl',
                     'unknown.session_1.caltables/21A-254.sb39658500.eb39706045.59359.146427581014.ms.hifv_finalcals.s13_2.finaldelay.tbl',   # Delays
                     'bandpass.bcal',
                     'intphase.gcal',
                     'amp.gcal',
                     'flux.cal'],
-         gainfield=['','','2','2','0','0','0'], # Field ID's for tables 
+         gainfield=['','','','2','2','0','0','0'], # Field ID's for tables 
          calwt=False)                           # Do not weigh?
 
 applycal(vis='21A-254.sb39658500.eb39706045.59359.146427581014.ms',     # Original file
          field='2',                             # Flux/bandpass calibrator
          gaintable=['unknown.session_1.caltables/21A-254.sb39658500.eb39706045.59359.146427581014.ms.hifv_priorcals.s5_2.gc.tbl',            # Gaincurve
                     'unknown.session_1.caltables/21A-254.sb39658500.eb39706045.59359.146427581014.ms.hifv_priorcals.s5_3.opac.tbl',          # Opacity
+                    'unknown.session_1.caltables/21A-254.sb39658500.eb39706045.59359.146427581014.ms.hifv_priorcals.s5_4.rq.tbl',
                     'unknown.session_1.caltables/21A-254.sb39658500.eb39706045.59359.146427581014.ms.hifv_finalcals.s13_2.finaldelay.tbl',   # Delays
                     'bandpass.bcal',
                     'intphase.gcal',
                     'amp.gcal',                    
                     'flux.cal'],
-         gainfield=['','','2','2','2','2','2'], # Field ID's for tables
+         gainfield=['','','','2','2','2','2','2'], # Field ID's for tables
          calwt=False)                           # Do not weigh?
 
 applycal(vis='21A-254.sb39658500.eb39706045.59359.146427581014.ms',     # Original file
          field='1',                             # Target source field
          gaintable=['unknown.session_1.caltables/21A-254.sb39658500.eb39706045.59359.146427581014.ms.hifv_priorcals.s5_2.gc.tbl',            # Gaincurve
                     'unknown.session_1.caltables/21A-254.sb39658500.eb39706045.59359.146427581014.ms.hifv_priorcals.s5_3.opac.tbl',          # Opacity
+                    'unknown.session_1.caltables/21A-254.sb39658500.eb39706045.59359.146427581014.ms.hifv_priorcals.s5_4.rq.tbl',
                     'unknown.session_1.caltables/21A-254.sb39658500.eb39706045.59359.146427581014.ms.hifv_finalcals.s13_2.finaldelay.tbl',   # Delays
                     'bandpass.bcal',
                     'scanphase.gcal',
                     'amp.gcal',
                     'flux.cal'],  # Opacity omitted
-         gainfield=['','','2','2','0','0','0'], # Field ID's for tables
+         gainfield=['','','','2','2','0','0','0'], # Field ID's for tables
          calwt=False)                           # Do not weigh?
 
 # Step 7: Split out the object
