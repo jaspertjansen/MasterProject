@@ -17,7 +17,7 @@ def ReadFITS(FileName):
 
 #%%
     
-source_name = 'AS2UDS231.0'
+source_name = 'CDFN1'
 
 
 Data, Header = ReadFITS('D:\\Master Astronomy Research year 2\\Master Project\\Table_with_FWHM2.fits')
@@ -25,6 +25,12 @@ Data, Header = ReadFITS('D:\\Master Astronomy Research year 2\\Master Project\\T
 index = np.where(source_name == Data['ID'])[0][0]
 
 print('FWHM is:', Data['FWHM'][index], '+-', Data['FWHM_err'][index])
+
+print('J_up', Data['J_up'][index])
+
+print('Ico', Data['I_co'][index])
+
+print('Lprime', Data['Lco_J'][index]/1e10)
 
 print('z is:', Data['z_CO'][index])
 

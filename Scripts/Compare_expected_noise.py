@@ -16,9 +16,19 @@ def ReadFITS(FileName):
     FITSFile.close()
     return Data, Header
 
-File = 'D:\\Master Astronomy Research year 2\\Master Project\\Noise\\AS2COS44-calib-only-NRAO.split.noise.image.fits'
+File = 'D:\\Master Astronomy Research year 2\\Master Project\\Noise\\AS2COS0054.1_NRAO_target.ms.split.noise.fits'
+#File = 'D:\\Master Astronomy Research year 2\\Master Project\\Noise\\as2cos1_sb_2_whole.noise.image.fits'
+#File = 'D:\\Master Astronomy Research year 2\\Master Project\\Noise\\CDFN1_NRAO_target.ms.split.noise.fits'
+
+
+
+freq_bw = 71.8440      # Found in proposal in MHz
+exp_noise = 27.0694      # Found in proposal in uJy/beam
 
 Data, Header = ReadFITS(File)
 
-RMS = np.std(Data[0:52,0:128])
-print ("RMS =", RMS*10**6, "uJy / beam")
+RMS_54_chan = np.std(Data[0:52,0:128])
+#RMS_54_chan = np.std(Data[76:128,0:128])
+RMS_freq_chan = np.sqrt(54/(freq_bw/2)) * RMS_54_chan
+print("RMS =", RMS_freq_chan*10**6, "uJy / beam")
+print("Fraction of exp noise", RMS_freq_chan*10**6/exp_noise)
