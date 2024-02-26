@@ -16,14 +16,14 @@ def ReadFITS(FileName):
     FITSFile.close()
     return Data, Header
 
-File = 'D:\\Master Astronomy Research year 2\\Master Project\\Noise\\AS2COS0054.1_NRAO_target.ms.split.noise.fits'
+File = 'D:\\Master Astronomy Research year 2\\Master Project\\Noise\\CDFN8_NRAO_target.ms.split.noise.fits'
 #File = 'D:\\Master Astronomy Research year 2\\Master Project\\Noise\\as2cos1_sb_2_whole.noise.image.fits'
 #File = 'D:\\Master Astronomy Research year 2\\Master Project\\Noise\\CDFN1_NRAO_target.ms.split.noise.fits'
 
 
 
-freq_bw = 71.8440      # Found in proposal in MHz
-exp_noise = 27.0694      # Found in proposal in uJy/beam
+freq_bw = 52.1003     # Found in proposal in MHz
+exp_noise = 36.1596      # Found in proposal in uJy/beam
 
 Data, Header = ReadFITS(File)
 

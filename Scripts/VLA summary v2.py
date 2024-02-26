@@ -102,7 +102,7 @@ split(vis='AS2COS0014.1_NRAO_combined_target.ms',                        # Origi
 # Expl: The expected noise is stated in the observing proposal. If there is a big
 #       difference, the NRAO calibration is off, or something else is going wrong
 
-tclean(vis='AS2COS0014.1_NRAO_combined_target.ms.split',               # Original file (+.constsub if step 5 is taken)
+tclean(vis='AS2COS0014.1_NRAO_combined_target.ms.split',               # Original file
        imagename='AS2COS0014.1_NRAO_combined_target.ms.split.noise',     # Destination file
        imsize=128,                              # How many pixels
        cell='0.5arcsec',                        # Size of pixel
