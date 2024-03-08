@@ -72,9 +72,11 @@ tclean(vis='AS2COS0031.1_NRAO_target_nobckgrndsrc.ms.split',                 # O
 # Step 1: Single SPW
 # Expl: We only want to have the SPW in which we expect the line
 
+listobs('AS2COS0028.1_NRAO_target.ms.split')
+
 split(vis='AS2COS0028.1_NRAO_target.ms.split',  # Original file + _nobckgrndsrc for COS14, COS31 and CDFN8
-      outputvis='AS2COS0028.1_NRAO_target.ms.split.line',   # Destinatio file
-      spw=10,                                   # SPW where line is
+      outputvis='AS2COS0028.1_NRAO_target.ms.split.2FWHM',   # Destinatio file
+      spw='10:xx~xx',                                   # Chans where the line is, use f_center*Dv/c/2 as offset and x=(center-begin)e+3/2 as middle channel
       datacolumn='data')                        # Select data
 
 # Step 2: Phaseshift
@@ -82,8 +84,8 @@ split(vis='AS2COS0028.1_NRAO_target.ms.split',  # Original file + _nobckgrndsrc 
 #       phase-errors, we shift the phasecenter to the center of emission. Check
 #       for center in new dirty image.
 
-tclean(vis='AS2COS0028.1_NRAO_target.ms.split.line',                 # Original file
-       imagename='AS2COS0028.1_NRAO_target.ms.split.line.center', # Destination file
+tclean(vis='AS2COS0028.1_NRAO_target.ms.split.2FWHM',                 # Original file
+       imagename='AS2COS0028.1_NRAO_target.ms.split.2FWHM.center', # Destination file
        imsize=128,                              # Smaller FoV
        cell='0.5arcsec',                        # Size of pixel
        pblimit=-0.01,                           # Primary beam gain, - for no cor
@@ -91,8 +93,8 @@ tclean(vis='AS2COS0028.1_NRAO_target.ms.split.line',                 # Original 
 
 myphasecenter='J2000 02h18m03.566s -04d55m27.214s'  # new phase-tracking center
 
-phaseshift(vis='AS2COS0028.1_NRAO_target.ms.split.line',    # Original file
-       outputvis='AS2COS0028.1_NRAO_target.ms.split.line.shifted',  # Destination file
+phaseshift(vis='AS2COS0028.1_NRAO_target.ms.split.2FWHM',    # Original file
+       outputvis='AS2COS0028.1_NRAO_target.ms.split.2FWHM.shifted',  # Destination file
        phasecenter=myphasecenter)               # Defined phasecenter
 
 # Step 3: Run visbin
@@ -101,9 +103,15 @@ phaseshift(vis='AS2COS0028.1_NRAO_target.ms.split.line',    # Original file
 
 uvbinsize = 5                                   # In Klambda
 
-vis = 'AS2COS0028.1_NRAO_target.ms.split.line.shifted'  # Original file
+vis = 'AS2COS0028.1_NRAO_target.ms.split.2FWHM.shifted'  # Original file
 
 execfile("/data1/jjansen/visbinning_2polarisations_new.py") # Binning procedure
+
+
+
+
+
+
 
 execfile("/data1/jjansen/errorfit_new.py")          # Plotting and fitting procedure
 
